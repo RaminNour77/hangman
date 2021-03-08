@@ -35,8 +35,11 @@ fn main() {
     if let Ok(words) = read_words("words.txt") {
         
         let mut rand_num = rand::thread_rng();
-        let word_num = rand_num.gen_range(0, words.len());
-        let word_to_guess = &words[word_num];
+        //.len() gives you the number of bytes and not the character count, so this will differ for graphemes
+        let word_num = rand_num.gen_range(0, words.len());      //random number that corresponds with number of word in words.txt
+        let word_to_guess = &words[word_num];                   
+        let mut user_input = String::new();                     //initialization of user input
+        let lives = word_to_guess.chars().count() + 2;          // the number of lives a player has based on the word they get
 
         let mut guess = String::new();
         for _c in word_to_guess.chars() {
@@ -47,11 +50,27 @@ fn main() {
         }
         print!("\n");
 
-        // guess[i] = word_to_gues[i]
+        //take user input as long as they have lives length
+        for _life in 0..lives{
+            let b1 : String = io::stdin().read_line(&mut user_input).unwrap().to_string(); // not getting the right character somehow!
+            //debug helper
+            print!("{}", &b1);
+            println!("{}", word_to_guess.contains(&b1));
+            //this whole if-else needs to be better!
 
-        // let mut user_input = String::new();
-        // let b1 = io::stdin().read_line(&mut user_input).unwrap();
-        // println!("{}", words[word_num]);
+            /*TODO:
+            check if the input is in the word_to_guess
+            if it is replace it in the guess string
+            else display lives and hangman!*/
+            if word_to_guess.contains(&b1){
+                println!("{} is in the word good job!", b1);
+            } 
+            else {
+                println!("{}/{} lives left", (lives - (_life + 1)), lives);
+            }
+            
+            }
+        println!("{}", words[word_num]);
     }
 
 
